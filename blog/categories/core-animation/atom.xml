@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Cocoa Faculty]]></title>
-  <link href="http://smokyonion.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Core Animation | Cocoa Faculty]]></title>
+  <link href="http://smokyonion.github.com/blog/categories/core-animation/atom.xml" rel="self"/>
   <link href="http://smokyonion.github.com/"/>
   <updated>2012-11-11T12:00:45-08:00</updated>
   <id>http://smokyonion.github.com/</id>
