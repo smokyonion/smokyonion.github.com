@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
+  <title><![CDATA[Cocoa Faculty]]></title>
   <link href="http://smokyonion.github.com/atom.xml" rel="self"/>
   <link href="http://smokyonion.github.com/"/>
-  <updated>2012-11-11T11:45:53-08:00</updated>
+  <updated>2012-11-11T11:52:49-08:00</updated>
   <id>http://smokyonion.github.com/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
+    <name><![CDATA[Vincent Wayne]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
