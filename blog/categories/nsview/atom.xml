@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: NSView | Cocoa Faculty]]></title>
+  <link href="http://smokyonion.github.com/blog/categories/nsview/atom.xml" rel="self"/>
+  <link href="http://smokyonion.github.com/"/>
+  <updated>2013-04-03T17:35:26-07:00</updated>
+  <id>http://smokyonion.github.com/</id>
+  <author>
+    <name><![CDATA[Vincent Wayne]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How to Make Your Mac Apps Retina-Ready]]></title>
+    <link href="http://smokyonion.github.com/blog/2012/11/11/how-to-make-your-mac-apps-retina-ready/"/>
+    <updated>2012-11-11T11:58:00-08:00</updated>
+    <id>http://smokyonion.github.com/blog/2012/11/11/how-to-make-your-mac-apps-retina-ready</id>
+    <content type="html"><![CDATA[<p>In the implementation file of your NSView class/subclass</p>
+
+<p>```obj-c</p>
+
+<h1>pragma mark Retina Display Support</h1>
+
+<ul>
+<li><p>(void)_updateContentScale
+{
+  NSWindow <em>mainWindow = [NSApp mainWindow];
+  NSWindow </em>layerWindow = [self window];
+  if (mainWindow || layerWindow) {</p>
+
+<pre><code>  CGFloat scale = [(layerWindow != nil) ? layerWindow : mainWindow backingScaleFactor];
+  CALayer *layer = self.layer;
+  if ([layer respondsToSelector:@selector(contentsScale)]) {
+      [self.layer setContentsScale:scale];
+      // TODO: setContentsScale for other layers belonged to this view here….
+  }
+</code></pre>
+
+<p>  }
+}</p></li>
+<li><p>(void)scaleDidChange:(NSNotification *)n
+{
+  [self _updateContentScale];
+}</p></li>
+<li><p>(void)viewDidMoveToWindow
+{
+  // Retina Display support
+  [[NSNotificationCenter defaultCenter] addObserver:self</p>
+
+<pre><code>                                       selector:@selector(scaleDidChange:)
+                                           name:@"NSWindowDidChangeBackingPropertiesNotification"
+                                         object:[self window]];
+</code></pre>
+
+<p>  // immediately update scale after the view has been added to a window
+  [self _updateContentScale];
+}</p></li>
+<li><p>(void)removeFromSuperview
+{
+  [super removeFromSuperview];
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NSWindowDidChangeBackingPropertiesNotification" object:[self window]];
+}</p></li>
+</ul>
+
+
+<p>```</p>
+]]></content>
+  </entry>
+  
+</feed>
