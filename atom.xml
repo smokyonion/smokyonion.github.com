@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Cocoa Faculty]]></title>
+  <link href="http://smokyonion.github.com/atom.xml" rel="self"/>
+  <link href="http://smokyonion.github.com/"/>
+  <updated>2012-11-11T22:02:22-08:00</updated>
+  <id>http://smokyonion.github.com/</id>
+  <author>
+    <name><![CDATA[Vincent Wayne]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How to Make Your Mac Apps Retina-Ready]]></title>
+    <link href="http://smokyonion.github.com/blog/2012/11/11/how-to-make-your-mac-apps-retina-ready/"/>
+    <updated>2012-11-11T11:58:00-08:00</updated>
+    <id>http://smokyonion.github.com/blog/2012/11/11/how-to-make-your-mac-apps-retina-ready</id>
+    <content type="html"><![CDATA[<h1>Header 1</h1>
+
+<h2>Header 2</h2>
+
+<h3>Header 3</h3>
+
+<p>Content goes here</p>
+]]></content>
+  </entry>
+  
+</feed>
