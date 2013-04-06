@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Foundation | Cocoa Faculty]]></title>
   <link href="http://smokyonion.github.com/blog/categories/foundation/atom.xml" rel="self"/>
   <link href="http://smokyonion.github.com/"/>
-  <updated>2013-04-05T21:11:55-07:00</updated>
+  <updated>2013-04-05T21:13:51-07:00</updated>
   <id>http://smokyonion.github.com/</id>
   <author>
     <name><![CDATA[Vincent Wayne]]></name>
@@ -74,10 +74,7 @@ NSError *error = [NSError errorWithDomain:@"MyErrorDomain" code:0 userInfo:info]
 
 <p>```</p>
 
-<p>You can obtain the source code <a href="https://gist.github.com/smokyonion/5324727">here</a> or see below</p>
-
-<script src="https://gist.github.com/smokyonion/5324727.js"></script>
-
+<p>You can obtain the source code <a href="https://gist.github.com/smokyonion/5324727">here</a>. Happy coding!</p>
 ]]></content>
   </entry>
   
