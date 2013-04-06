@@ -53,6 +53,4 @@ to
     
 ```
 
-You can obtain the source code [here](https://gist.github.com/smokyonion/5324727) or see below
-
-<script src="https://gist.github.com/smokyonion/5324727.js"></script>
+You can obtain the source code [here](https://gist.github.com/smokyonion/5324727). Happy coding!
