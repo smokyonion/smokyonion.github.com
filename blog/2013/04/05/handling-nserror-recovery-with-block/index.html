@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Cocoa Faculty</title>
+  <title>Handling NSError Recovery With Block - Cocoa Faculty</title>
   <meta name="author" content="Vincent Wayne">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://smokyonion.github.com/">
+  <link rel="canonical" href="http://smokyonion.github.com/blog/2013/04/05/handling-nserror-recovery-with-block/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -83,16 +83,13 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2013/04/05/handling-nserror-recovery-with-block/">Handling NSError Recovery With Block</a></h1>
+      
+        <h1 class="entry-title">Handling NSError Recovery With Block</h1>
       
     
     
@@ -116,7 +113,7 @@
   </header>
 
 
-  <div class="entry-content"><p>There are several scenarios where we have to provide users recovery options while the application encountered an error. However, creating a recoverable NSError is not a very pleasant experience. It&#8217;s just tedious, so I wrapped up the creation process into one single API with block support.</p>
+<div class="entry-content"><p>There are several scenarios where we have to provide users recovery options while the application encountered an error. However, creating a recoverable NSError is not a very pleasant experience. It&#8217;s just tedious, so I wrapped up the creation process into one single API with block support.</p>
 
 <p>This NSError category changed the process of creating a recoverable NSError from</p>
 
@@ -198,24 +195,16 @@
 <script src="https://gist.github.com/smokyonion/5324727.js"></script>
 
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2012/11/11/how-to-make-your-mac-apps-retina-ready/">How to Make Your Mac Apps Retina-Ready</a></h1>
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Vincent Wayne</span></span>
+
       
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -227,106 +216,38 @@
   
 
 
-<time datetime="2012-11-11T11:58:00-08:00" pubdate data-updated="true">Nov 11<span>th</span>, 2012</time>
-        
-      </p>
+<time datetime="2013-04-05T20:46:00-07:00" pubdate data-updated="true">Apr 5<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/foundation/'>Foundation</a>
+  
+</span>
+
+
+    </p>
     
-  </header>
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://smokyonion.github.com/blog/2013/04/05/handling-nserror-recovery-with-block/" data-via="smokyonion" data-counturl="http://smokyonion.github.com/blog/2013/04/05/handling-nserror-recovery-with-block/" >Tweet</a>
+  
+  
+  
+</div>
 
-
-  <div class="entry-content"><p>In the implementation file of your NSView class/subclass</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-</pre></td><td class='code'><pre><code class='obj-c'><span class='line'><span class="cp">#pragma mark Retina Display Support</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">_updateContentScale</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">NSWindow</span> <span class="o">*</span><span class="n">mainWindow</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSApp</span> <span class="n">mainWindow</span><span class="p">];</span>
-</span><span class='line'>    <span class="n">NSWindow</span> <span class="o">*</span><span class="n">layerWindow</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="n">window</span><span class="p">];</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="n">mainWindow</span> <span class="o">||</span> <span class="n">layerWindow</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">CGFloat</span> <span class="n">scale</span> <span class="o">=</span> <span class="p">[(</span><span class="n">layerWindow</span> <span class="o">!=</span> <span class="nb">nil</span><span class="p">)</span> <span class="o">?</span> <span class="n">layerWindow</span> <span class="o">:</span> <span class="n">mainWindow</span> <span class="n">backingScaleFactor</span><span class="p">];</span>
-</span><span class='line'>        <span class="n">CALayer</span> <span class="o">*</span><span class="n">layer</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">layer</span><span class="p">;</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">([</span><span class="n">layer</span> <span class="nl">respondsToSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">contentsScale</span><span class="p">)])</span> <span class="p">{</span>
-</span><span class='line'>            <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">layer</span> <span class="nl">setContentsScale:</span><span class="n">scale</span><span class="p">];</span>
-</span><span class='line'>            <span class="c1">// TODO: setContentsScale for other layers belonged to this view here….</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">scaleDidChange:</span><span class="p">(</span><span class="n">NSNotification</span> <span class="o">*</span><span class="p">)</span><span class="nv">n</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="p">[</span><span class="n">self</span> <span class="n">_updateContentScale</span><span class="p">];</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">viewDidMoveToWindow</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="c1">// Retina Display support</span>
-</span><span class='line'>    <span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nl">addObserver:</span><span class="n">self</span>
-</span><span class='line'>                                             <span class="nl">selector:</span><span class="k">@selector</span><span class="p">(</span><span class="nl">scaleDidChange:</span><span class="p">)</span>
-</span><span class='line'>                                                 <span class="nl">name:</span><span class="s">@&quot;NSWindowDidChangeBackingPropertiesNotification&quot;</span>
-</span><span class='line'>                                               <span class="nl">object:</span><span class="p">[</span><span class="n">self</span> <span class="n">window</span><span class="p">]];</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">// immediately update scale after the view has been added to a window</span>
-</span><span class='line'>    <span class="p">[</span><span class="n">self</span> <span class="n">_updateContentScale</span><span class="p">];</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">removeFromSuperview</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="p">[</span><span class="n">super</span> <span class="n">removeFromSuperview</span><span class="p">];</span>
-</span><span class='line'>    <span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="n">defaultCenter</span><span class="p">]</span> <span class="nl">removeObserver:</span><span class="n">self</span> <span class="nl">name:</span><span class="s">@&quot;NSWindowDidChangeBackingPropertiesNotification&quot;</span> <span class="nl">object:</span><span class="p">[</span><span class="n">self</span> <span class="n">window</span><span class="p">]];</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2012/11/11/how-to-make-your-mac-apps-retina-ready/" title="Previous Post: How to Make Your Mac Apps Retina-Ready">&laquo; How to Make Your Mac Apps Retina-Ready</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
 </div>
-  
-  
 
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -348,7 +269,7 @@
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -367,6 +288,7 @@
 
   
 </aside>
+
 
     </div>
   </div>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Foundation | Cocoa Faculty]]></title>
+  <link href="http://smokyonion.github.com/blog/categories/foundation/atom.xml" rel="self"/>
+  <link href="http://smokyonion.github.com/"/>
+  <updated>2013-04-05T21:11:55-07:00</updated>
+  <id>http://smokyonion.github.com/</id>
+  <author>
+    <name><![CDATA[Vincent Wayne]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Handling NSError Recovery With Block]]></title>
+    <link href="http://smokyonion.github.com/blog/2013/04/05/handling-nserror-recovery-with-block/"/>
+    <updated>2013-04-05T20:46:00-07:00</updated>
+    <id>http://smokyonion.github.com/blog/2013/04/05/handling-nserror-recovery-with-block</id>
+    <content type="html"><![CDATA[<p>There are several scenarios where we have to provide users recovery options while the application encountered an error. However, creating a recoverable NSError is not a very pleasant experience. It's just tedious, so I wrapped up the creation process into one single API with block support.</p>
+
+<p>This NSError category changed the process of creating a recoverable NSError from</p>
+
+<p>```obj-c
+   // Assume id recoveryDelegate exists</p>
+
+<pre><code>NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:0];
+[info setObject:@"title" forKey:NSLocalizedDescriptionKey];
+[info setObject:@"suggestion" forKey:NSLocalizedRecoverySuggestionErrorKey];
+[info setObject:[NSArray arrayWithObjects:@"default", @"alternate", @"other option", nil]  forKey:NSLocalizedRecoveryOptionsErrorKey];
+[info setObject:recoveryDelegate forKey:NSRecoveryAttempterErrorKey];
+
+NSError *error = [NSError errorWithDomain:@"MyErrorDomain" code:0 userInfo:info];
+</code></pre>
+
+<p>```</p>
+
+<p>```obj-c
+// somewhere in recoveryDelegate's implementation file</p>
+
+<h1>pragma mark NSErrorRecoveryAttempting Protocol</h1>
+
+<p>// This will be invoked while the error was presented with -[NSView presentError:modalForWindow:....]
+- (void)attemptRecoveryFromError:(NSError <em>)error optionIndex:(NSUInteger)recoveryOptionIndex delegate:(id)delegate didRecoverSelector:(SEL)didRecoverSelector contextInfo:(void </em>)contextInfo
+{
+   // Do something here to recover the error based on the selected option
+}</p>
+
+<p>// This will be invoked while the error was presented with -[NSApp presentError:]
+- (BOOL)attemptRecoveryFromError:(NSError *)error optionIndex:(NSUInteger)recoveryOptionIndex
+{
+   // Do something here to recover the error based on the selected option</p>
+
+<pre><code>return YES;
+</code></pre>
+
+<p>}
+```</p>
+
+<p>to</p>
+
+<p>```obj-c</p>
+
+<p>   NSError *error = [NSError ot_errorWithTitle:@"title"</p>
+
+<pre><code>                        recoverySuggestion:@"suggestion" 
+                           recoveryOptions:[NSArray arrayWithObjects:@"default", @"alternate", @"other option", nil] 
+                           recoveryHandler:^(NSUInteger optionIndex) {
+   // Do something here to recover the error based on the selected option
+</code></pre>
+
+<p>   }];</p>
+
+<p>```</p>
+
+<p>You can obtain the source code <a href="https://gist.github.com/smokyonion/5324727">here</a> or see below</p>
+
+<script src="https://gist.github.com/smokyonion/5324727.js"></script>
+
+]]></content>
+  </entry>
+  
+</feed>

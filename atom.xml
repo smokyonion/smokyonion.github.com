@@ -4,7 +4,7 @@
   <title><![CDATA[Cocoa Faculty]]></title>
   <link href="http://smokyonion.github.com/atom.xml" rel="self"/>
   <link href="http://smokyonion.github.com/"/>
-  <updated>2013-04-03T17:56:56-07:00</updated>
+  <updated>2013-04-05T21:11:55-07:00</updated>
   <id>http://smokyonion.github.com/</id>
   <author>
     <name><![CDATA[Vincent Wayne]]></name>
@@ -12,6 +12,95 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Handling NSError Recovery With Block]]></title>
+    <link href="http://smokyonion.github.com/blog/2013/04/05/handling-nserror-recovery-with-block/"/>
+    <updated>2013-04-05T20:46:00-07:00</updated>
+    <id>http://smokyonion.github.com/blog/2013/04/05/handling-nserror-recovery-with-block</id>
+    <content type="html"><![CDATA[<p>There are several scenarios where we have to provide users recovery options while the application encountered an error. However, creating a recoverable NSError is not a very pleasant experience. It&#8217;s just tedious, so I wrapped up the creation process into one single API with block support.</p>
+
+<p>This NSError category changed the process of creating a recoverable NSError from</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='obj-c'><span class='line'>   <span class="c1">// Assume id recoveryDelegate exists</span>
+</span><span class='line'>    <span class="n">NSMutableDictionary</span> <span class="o">*</span><span class="n">info</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSMutableDictionary</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithCapacity:</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">info</span> <span class="nl">setObject:</span><span class="s">@&quot;title&quot;</span> <span class="nl">forKey:</span><span class="n">NSLocalizedDescriptionKey</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">info</span> <span class="nl">setObject:</span><span class="s">@&quot;suggestion&quot;</span> <span class="nl">forKey:</span><span class="n">NSLocalizedRecoverySuggestionErrorKey</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">info</span> <span class="nl">setObject:</span><span class="p">[</span><span class="n">NSArray</span> <span class="nl">arrayWithObjects:</span><span class="s">@&quot;default&quot;</span><span class="p">,</span> <span class="s">@&quot;alternate&quot;</span><span class="p">,</span> <span class="s">@&quot;other option&quot;</span><span class="p">,</span> <span class="nb">nil</span><span class="p">]</span>  <span class="nl">forKey:</span><span class="n">NSLocalizedRecoveryOptionsErrorKey</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">info</span> <span class="nl">setObject:</span><span class="n">recoveryDelegate</span> <span class="nl">forKey:</span><span class="n">NSRecoveryAttempterErrorKey</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSError</span> <span class="nl">errorWithDomain:</span><span class="s">@&quot;MyErrorDomain&quot;</span> <span class="nl">code:</span><span class="mi">0</span> <span class="nl">userInfo:</span><span class="n">info</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='obj-c'><span class='line'><span class="cp">// somewhere in recoveryDelegate&#39;s implementation file</span>
+</span><span class='line'><span class="cp">#pragma mark NSErrorRecoveryAttempting Protocol</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// This will be invoked while the error was presented with -[NSView presentError:modalForWindow:....]</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">attemptRecoveryFromError:</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span> <span class="nf">optionIndex:</span><span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">recoveryOptionIndex</span> <span class="nf">delegate:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">delegate</span> <span class="nf">didRecoverSelector:</span><span class="p">(</span><span class="kt">SEL</span><span class="p">)</span><span class="nv">didRecoverSelector</span> <span class="nf">contextInfo:</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="nv">contextInfo</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>   <span class="c1">// Do something here to recover the error based on the selected option</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// This will be invoked while the error was presented with -[NSApp presentError:]</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">attemptRecoveryFromError:</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span> <span class="nf">optionIndex:</span><span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">recoveryOptionIndex</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>   <span class="c1">// Do something here to recover the error based on the selected option</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>to</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='obj-c'><span class='line'>   <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSError</span> <span class="nl">ot_errorWithTitle:</span><span class="s">@&quot;title&quot;</span>
+</span><span class='line'>                            <span class="nl">recoverySuggestion:</span><span class="s">@&quot;suggestion&quot;</span>
+</span><span class='line'>                               <span class="nl">recoveryOptions:</span><span class="p">[</span><span class="n">NSArray</span> <span class="nl">arrayWithObjects:</span><span class="s">@&quot;default&quot;</span><span class="p">,</span> <span class="s">@&quot;alternate&quot;</span><span class="p">,</span> <span class="s">@&quot;other option&quot;</span><span class="p">,</span> <span class="nb">nil</span><span class="p">]</span>
+</span><span class='line'>                               <span class="nl">recoveryHandler:</span><span class="o">^</span><span class="p">(</span><span class="n">NSUInteger</span> <span class="n">optionIndex</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>       <span class="c1">// Do something here to recover the error based on the selected option</span>
+</span><span class='line'>   <span class="p">}];</span>
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can obtain the source code <a href="https://gist.github.com/smokyonion/5324727">here</a> or see below</p>
+
+<script src="https://gist.github.com/smokyonion/5324727.js"></script>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to Make Your Mac Apps Retina-Ready]]></title>
